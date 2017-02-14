@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,21 +14,17 @@ public class UDPClient {
 	}
 	
 	public static void main(String[] args) {
-	  	int DHTServerSocket = 10000;
-	  	Socket DHTSvrSocket;
+	  	int serverPort = 10000;
+	  	Socket sock;
 		try {
-			DHTSvrSocket = new Socket("localhost", DHTServerSocket);
-		  	BufferedWriter outToSoc = new BufferedWriter(
-					new OutputStreamWriter(DHTSvrSocket.getOutputStream(),Charset.forName("UTF-8")));
-		  	
-		  	ServerSocket Sock = new ServerSocket(0);
-		  	int rplPort = Sock.getLocalPort();
-		  	System.out.print("send msg to DHT server :");
-		  	System.out.println("Reply port :"+rplPort);
-		  	outToSoc.write(rplPort+"");
-		  	outToSoc.flush();
-		  	outToSoc.close();
-		  	DHTSvrSocket.close();
+			sock = new Socket("localhost", serverPort);
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+					sock.getOutputStream(),Charset.forName("UTF-8")));
+
+		  	out.write("Hello Java UDP Server!!!! \n");
+		  	out.flush();
+		  	out.close();
+		  	sock.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
