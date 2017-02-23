@@ -1,39 +1,39 @@
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
+import java.net.*;
+import java.io.*;
 
-public class UDPClient {
-  	
-	public UDPClient () {
-		
-	}
-	
-	public static void main(String[] args) {
-	  	int serverPort = 10000;
-	  	Socket sock;
-		try {
-			sock = new Socket("localhost", serverPort);
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-					sock.getOutputStream(),Charset.forName("UTF-8")));
+public class UDPClient
+{
+	public static void main(String[] args){
+		String hostname = "localhost";
+		int port = 10000;
 
-		  	out.write("Hello Java UDP Server!!!! \n");
-		  	out.flush();
-		  	out.close();
-		  	sock.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+		try{
+			String strInput = "hi hi hello";
+			DatagramPacket outPacket;
+
+			InetAddress server = InetAddress.getByName(hostname);
+
+			DatagramSocket dSock = new DatagramSocket();
+
+			byte[] data = strInput.getBytes();
+
+			outPacket = new DatagramPacket(data, data.length, server, port);
+
+			System.out.println("패킷의 대상 주소:"+outPacket.getAddress().toString());
+			System.out.println("패킷의 대상 포트:"+outPacket.getPort());
+			System.out.println("패킷의 데이터 크기:"+outPacket.getLength());
+			
+			dSock.send(outPacket);
+
+		}catch(UnknownHostException e){
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}catch(SocketException se){
+			se.printStackTrace();
+		}catch(IOException e){
 			e.printStackTrace();
 		}
-	  	
-
 	}
-
 }
+
